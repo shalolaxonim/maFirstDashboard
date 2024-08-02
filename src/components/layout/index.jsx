@@ -4,7 +4,7 @@ const { Sider, Content } = Layout;
 
 const contentStyle = {
   minHeight: "730px",
-  backgroundColor: "pink",
+  color: "#177165",
   marginLeft: "306px",
 };
 const siderStyle = {
@@ -29,7 +29,8 @@ export default function LayoutMine({ children }) {
         <Sider width="20%" style={siderStyle}>
           <div className="flex flex-col gap-[20px] hover:text-[#6afa6a]">
             <Link to="/">Home</Link>
-            <Link to="/news">News</Link>
+            <Link to="/news">News/Get</Link>
+            <Link to="/create">Create</Link>
           </div>
         </Sider>
         <Layout>
