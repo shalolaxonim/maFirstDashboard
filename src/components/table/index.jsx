@@ -95,7 +95,7 @@ const TABLE_ROWS = [
 export function ProductsPage({ date }) {
   const getNews = () => baseInstance.get("/news").then((res) => res.data);
   const { data, isLoading } = useQuery(["news"], getNews);
-  
+
   //   console.log(data);
   return (
     <div>
@@ -289,6 +289,7 @@ export function ProductsPage({ date }) {
           </div>
         </CardFooter>
       </Card> */}
+      <h1>all news</h1>
       {data.map((n) => (
         <div>
           <h2>Title: {n?.title}</h2>
