@@ -27,8 +27,9 @@ export default function CreatePage() {
     mutation.mutate(
       { ...e, date: "12.02.2012", time: "12:45" },
       {
-        onSuccess: (d, v, c) => console.log(d, v, c),
-        // queryClient.invalidateQueries(["news"]),
+        onSuccess: (d, v, c) => {
+          console.log(d, v, c), queryClient.invalidateQueries(["news"]);
+        },
       }
     );
   };
@@ -70,7 +71,7 @@ export default function CreatePage() {
           )}
         />
         <Controller
-          name="Picture link"
+          name="PictureLink"
           control={control}
           rules={{
             required: "This is required!",

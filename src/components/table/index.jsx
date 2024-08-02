@@ -19,6 +19,9 @@ import {
 import { useForm } from "react-hook-form";
 import { baseInstance } from "../../axios";
 import { useMutation, useQuery } from "react-query";
+import { Table } from "antd";
+import { Link } from "react-router-dom";
+import { queryClient } from "../../main";
 
 const TABS = [
   {
@@ -94,9 +97,55 @@ const TABLE_ROWS = [
 
 export function ProductsPage({ date }) {
   const getNews = () => baseInstance.get("/news").then((res) => res.data);
-  const { data, isLoading } = useQuery(["news"], getNews);
-  
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["news"],
+    queryFn: getNews,
+  });
+  const postNews = (id) => {
+    baseInstance.delete(`/news/${id}`).then((res) => res.data);
+  };
+  const mutation = useMutation({
+    mutationFn: postNews,
+  });
   //   console.log(data);
+  const deleteProd = (id) => {
+    mutation.mutate(id, {
+      onSuccess: (d, v, c) => {
+        console.log("aaaaaaaaaaaaaaaaa");
+        refetch();
+      },
+    });
+  };
+
+  const columns = [
+    {
+      title: "Aftorlar",
+      dataIndex: "Author",
+      key: "author",
+    },
+    {
+      title: "Description",
+      dataIndex: "Description",
+      key: "Description",
+    },
+    {
+      title: "PictureLink",
+      dataIndex: "PictureLink",
+      key: "PictureLink",
+    },
+    {
+      title: "Edit",
+      dataIndex: "_id",
+      key: "edit",
+      render: (_id) => <Link to={`/update/${_id}`}>edit</Link>,
+    },
+    {
+      title: "Delete",
+      dataIndex: "_id",
+      key: "del",
+      render: (_id) => <button onClick={() => deleteProd(_id)}>delete</button>,
+    },
+  ];
   return (
     <div>
       {/* <Card className="h-full w-full">
@@ -289,10 +338,11 @@ export function ProductsPage({ date }) {
           </div>
         </CardFooter>
       </Card> */}
-      {data.map((n) => (
+      <Table dataSource={data} columns={columns} />;
+      {data?.map((n) => (
         <div>
           <h2>Title: {n?.title}</h2>
-          <h2>Author: {n?.author}</h2>
+          <h2>Author: {n?.Author}</h2>
         </div>
       ))}
     </div>
