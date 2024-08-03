@@ -1,49 +1,51 @@
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { baseInstance } from "../../axios";
+import { useMutation } from "react-query";
 import { Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { Controller, useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { baseInstance } from "../../axios";
 import { queryClient } from "../../main";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function CreatePage() {
+export default function UpdatePage() {
   const nav = useNavigate();
-  const {
-    handleSubmit,
-    reset,
-    control,
-    // register,
-    // formState: { errors },
-  } = useForm();
-  //   console.log(errors);
-  const postNews = (data) => {
-    baseInstance.post("/news", data).then((res) => res.data);
-  };
+  const { id } = useParams();
+  console.log(id);
+  const { control, reset, handleSubmit } = useForm();
+
+  let [news, setNews] = useState({});
+  useEffect(() => {
+    baseInstance.get(`/news/${id}`).then((res) => setNews(res.data));
+  }, []);
+  //   const getNews = () => baseInstance.get(`/news/${id}`).then((res) => res.data);
+  useEffect(() => {
+    let { _id, ...others } = news;
+    reset(others);
+  }, [news]);
+
+  const updateNews = (data) =>
+    baseInstance.put(`/news/${id}`, data).then(() => console.log("updated"));
   const mutation = useMutation({
-    mutationFn: postNews,
-    mutationKey: "createNews",
+    mutationFn: updateNews,
+    mutationKey: "updateNews",
   });
 
-  const createNews = (e) => {
-    console.log(e);
-    mutation.mutate(
-      { ...e, date: "12.02.2012", time: "12:45" },
-      {
-        onSuccess: (d, v, c) => {
-          console.log(d, v, c),
-            queryClient.invalidateQueries(["news"]),
-            nav("/news"),
-            toast.success("Created successfully!");
-        },
-      }
-    );
+  const update = (e) => {
+    mutation.mutate(e, {
+      onSuccess: (d, v, c) => {
+        console.log(d, v, c),
+          queryClient.invalidateQueries(["news"]),
+          nav("/news"),
+          toast.success("Updated successfully");
+      },
+    });
   };
   return (
     <div>
-      <h1>You can add news here..</h1>
+      <h1>UpdatePage</h1>
       <form
-        onSubmit={handleSubmit(createNews)}
+        onSubmit={handleSubmit(update)}
         className="flex flex-col items-start gap-[20px]"
       >
         <Controller
@@ -87,18 +89,6 @@ export default function CreatePage() {
           )}
         />
         <button>create</button>
-
-        {/* <input
-          type="url"
-          placeholder="Picture Link"
-          {...register("Picture Link", {})}
-        />
-        <input type="text" placeholder="Author" {...register("Author", {})} />
-        <input type="text" placeholder="Title" {...register("Title", {})} />
-        <textarea {...register("Description", {})} />
-        <input type="text" placeholder="Date" {...register("Date", {})} />
-
-        <input type="submit" /> */}
       </form>
     </div>
   );

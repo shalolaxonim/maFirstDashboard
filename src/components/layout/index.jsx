@@ -27,10 +27,22 @@ export default function LayoutMine({ children }) {
     <div>
       <Layout style={layoutStyle}>
         <Sider width="20%" style={siderStyle}>
-          <div className="flex flex-col gap-[20px] hover:text-[#6afa6a]">
-            <Link to="/">Home</Link>
-            <Link to="/news">News/Get</Link>
-            <Link to="/create">Create</Link>
+          <div className="flex flex-col gap-[20px] ">
+            <Link className="hover:text-[#6afa6a]" to="/">
+              Home
+            </Link>
+            <Link className="hover:text-[#6afa6a]" to="/news">
+              News/Get
+            </Link>
+            <Link className="hover:text-[#6afa6a]" to="/create">
+              Create/Post
+            </Link>
+            <Link className="hover:text-[#6afa6a]" to="/clients">
+              Client Comments
+            </Link>
+            <Link className="hover:text-[#6afa6a]" to="/comments">
+              Leave Comments
+            </Link>
           </div>
         </Sider>
         <Layout>
